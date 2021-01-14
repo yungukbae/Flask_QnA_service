@@ -9,29 +9,36 @@ db = SQLAlchemy(app)
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key = True )
     content = db.Column(db.String(200), nullable=False)
+    name = db.Column(db.String(200))
     date_created = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Task %r>' % self.id
 
+
+
+
 @app.route('/',methods=['POST','GET'])
 def index():
     if request.method == 'POST':
         task_content = request.form['content']
-        new_task = Todo(content=task_content)
-
-
+        task_name = request.form['name']
+        new_task = Todo(content=task_content, name=task_name)
+        
         try:
             db.session.add(new_task)
             db.session.commit()
             return redirect('/')
-
 
         except:
             return 'There was an issue adding your task'
     else:
         tasks = Todo.query.order_by(Todo.date_created).all()
         return render_template('index.html', tasks = tasks)
+
+
+
+
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -45,12 +52,16 @@ def delete(id):
     except:
         return 'There was a problem deleting that task'
 
+
+
+
 @app.route('/update/<int:id>',methods=['GET','POST'])
 def update(id):
     task = Todo.query.get_or_404(id)
 
     if request.method == "POST":
         task.content = request.form['content']
+        task.name = request.form['name']
         
         try:
             db.session.commit()
@@ -59,6 +70,9 @@ def update(id):
             return 'There was an issue updating task'
     else:
         return render_template('update.html',task = task)
+
+
+
 
 
 if __name__ == "__main__":
