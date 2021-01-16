@@ -1,0 +1,10 @@
+{% if question_list %}      <!-- 이 코드는 render_template 함수에서 전달받은 질문 목록 데이터 question_list가 있는지 검사한다 -->
+    <ul>
+        {% for question in question_list %}     <!--question_list에 저장된 데이터를 for문으로 question에 하나씩 대입한다.-->
+        <li><a href="{{ url_for('question.detail',question_id=question.id) }}"><!--question.id= id를 출력한다.-->{{ question.subject }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>질문이 없습니다.</p>
+{% endif %}
+

@@ -1,0 +1,23 @@
+    
+    <h1>{{ question.subject }}</h1>
+    <div>
+        {{ question.content }}
+    </div>
+
+    <h5>{{ question.answer_set|length }}개의 답변이 있습니다.</h5>
+<div>
+    <ul>
+        {% for answer in question.answer_set %}
+        <li>
+                {{answer.content}}
+        </li>
+        {%endfor%}
+    </ul>
+</div>
+
+<form action="{{url_for('answer.create',question_id=question.id)}}" method="POST">
+    <textarea name="content" id="content" rows="15"></textarea>
+    <input type="submit" value="답변등록">
+</form>
+<!--답변 저장URL은 from엘리먼트 action속성에 지정된 url_for('answer.create',question_id=question.id)함수가 알려준다.-->
+<!---->
