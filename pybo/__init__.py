@@ -25,5 +25,6 @@ app.register_blueprint(question_views.bp)
 app.register_blueprint(answer_viwes.bp)
 
 
+
 if __name__ == '__main__':
     app.run(debug=True)
