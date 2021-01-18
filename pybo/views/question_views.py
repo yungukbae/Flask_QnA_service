@@ -10,9 +10,11 @@ bp = Blueprint('question',__name__, url_prefix='/question')
 
 @bp.route('/list/')
 def _list():
-    question_list = Question.query.order_by(Question.create_date.desc()) 
+    page = request.args.get('page',type=int, default=1 ) #페이지
+    question_list = Question.query.order_by(Question.create_date.asc()) 
     #Question.query.order_by(Question.create_date.desc()) => Question.qeury.order_by(create_date의 desc(역순)으로 정렬해라)
     #Question.query.order_by(Question.create_date.asc()) => 작성 일시 순으로 정렬해라
+    question_list = question_list.paginate(page, per_page=10)
     return render_template('question/question_list.html',question_list=question_list)
 
 @bp.route('/detail/<int:question_id>/')

@@ -1,9 +1,7 @@
-<link rel="stylesheet" href="{{ url_for('static',filename='bootstrap.min.css') }}">
 {% extends 'base.html' %}
 {% block content %}
 <div class="container my-3">
     <table class="table">
-            <a href="{{url_for('question.create')}}" class="btn btn-primary">질문 등록하기</a>
         <thead>
             <tr class="thead-dark">
                 <th>번호</th>
@@ -12,14 +10,16 @@
             </tr>
         </thead>
         <tbody>
-            {% if question_list %}      <!-- 이 코드는 render_template 함수에서 전달받은 질문 목록 데이터 question_list가 있는지 검사한다 -->
-                {% for question in question_list %}     <!--question_list에 저장된 데이터를 for문으로 question에 하나씩 대입한다.-->
+            {% if question_list %}    
+            <!--이 코드는 render_template 함수에서 전달받은 질문 목록 데이터 question_list가 있는지 검사한다 -->
+                {% for question in question_list.items %}
+                <!--question_list에 저장된 데이터를 for문으로 question에 하나씩 대입한다.-->
                 <tr>
-                    <td>{{ loop.index }}</td>
+                    <td>{{ question.id }}</td>
                     <td>
-                        <a href="{{ url_for('question.detail',question_id=question.id) }}"><!--question.id= id를 출력한다.-->{{ question.subject }}</a>
+                        <a href="{{ url_for('question.detail',question_id=question.id) }}"> <!--question.id= id를 출력한다.-->{{ question.subject }}</a>
                     </td>
-                    <td>{{ question.create_date }}</td>
+                    <td>{{ question.create_date|datetime }}</td>
                 </tr>
                 {% endfor %}
                 {% else %}
@@ -29,6 +29,46 @@
         {% endif %}
         </tbody>
     </table>
+        <ul class="pagination justify-content-center">
+            {% if question_list.has_prev %}
+            <li class="page-item">
+                <a href="?page={{ question_list.prev_num }}" class="page-link">이전</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <a href="#" class="page-link" tabindex="-1" aria-disabled="true">이전</a>
+            </li>
+        {% endif %}
+        {% for page_num in question_list.iter_pages() %}
+            {% if page_num %}
+                {% if page_num != question_list.page %}
+                <li class="page-item">
+                    <a href="?page={{ page_num }}" class="page-link">{{ page_num }}</a>
+                </li>
+                {% else %}
+                <li class="page-item active" aria-current="page">
+                    <a href="#" class="page-link">{{ page_num }}</a>
+                </li>
+                {% endif %}
+            {% else %}
+            <li class="disabled">
+                <a href="#" class="page-link">...</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+        {% if question_list.has_next %}
+        <li class="page-item">
+            <a href="?page={{ question_list.next_num }}" class="page-link">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a href="#" class="page-link" tabindex="-1" aria-disabled="true">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+        
+    
+    <a href="{{url_for('question.create')}}" class="btn btn-primary">질문 등록하기</a>
 </div>
 {% endblock %}
 

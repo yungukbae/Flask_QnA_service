@@ -24,7 +24,8 @@ app.register_blueprint(main_views.bp)
 app.register_blueprint(question_views.bp)
 app.register_blueprint(answer_viwes.bp)
 
-
+from .filter import format_datetime
+app.jinja_env.filters['datetime'] = format_datetime
 
 if __name__ == '__main__':
     app.run(debug=True)
