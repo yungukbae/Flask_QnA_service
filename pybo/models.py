@@ -1,3 +1,4 @@
+from enum import unique
 from sqlalchemy.orm import backref, create_session
 from pybo import db
 
@@ -13,4 +14,10 @@ class Answer(db.Model):
     question = db.relationship('Question',backref=db.backref('answer_set'))  #quesion속성은 답변 모델에서 질문 모델을 참조하기 위해 추가했다. 예를 들어 답변 모델 객체에서 질문 모델 객체의 제목을 참조하려면 answer.question.subject처럼 할 수 있다. 이렇게 하려면 속성을 추가할 때 db.Column이 아닌 db.relationship을 사용해야한다.
     content = db.Column(db.Text(), nullable=False)
     create_date = db.Column(db.DateTime(), nullable=False)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), nullable=False)  #unique는 같은 값을 저장할 수 없다는 뜻이다.
+    password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(120),unique=True, nullable=False)
 

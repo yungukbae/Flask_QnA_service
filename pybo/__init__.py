@@ -12,17 +12,18 @@ app = Flask(__name__)
 app.config.from_object(config)      #config 파일에 작성한 항목을 app.config환경 변수로 부르기 위해 이 코드를 추가헀다
 
 
-#ORM  flask db init하기전에 'export FLASK_APP=pybo/__init__.py' 해야 파일 잡음 ㄹㅇㅋㅋ
+#ORM  flask db init하기전에 'export FLASK_APP=pybo/__init__.py' 해야 파일 잡음
 #모델을 추가하거나 변경할떄는 flask db migrate(모델을 새로 생성하거나 변결할 때 사용) 명령이나 flask db upgrade(모델의 변경 내용을 실제 데이터베이스에 적용할 떄 사용) 명령만을 사용한다.
 db.init_app(app)
 migrate.init_app(app,db)
 
 from . import models
 
-from .views import main_views, question_views, answer_viwes
+from .views import main_views, question_views, answer_viwes, auth_views
 app.register_blueprint(main_views.bp)
 app.register_blueprint(question_views.bp)
 app.register_blueprint(answer_viwes.bp)
+app.register_blueprint(auth_views.bp)
 
 from .filter import format_datetime
 app.jinja_env.filters['datetime'] = format_datetime
