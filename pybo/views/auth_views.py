@@ -4,6 +4,7 @@ from flask_wtf import form
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect
 from wtforms.validators import Email
+import functools
 
 from pybo import db
 from pybo.forms import UserCreateForm,UserLoginForm
@@ -56,3 +57,13 @@ def load_logged_in_user():
 def logout():
     session.clear()
     return redirect(url_for('main.index'))
+
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if g.user is None:
+            return redirect(url_for('auth.login'))
+        return view(**kwargs)
+    return wrapped_view
+    
