@@ -20,7 +20,8 @@ def create(question_id):
         answer = Answer(content=content, create_date=datetime.now(), user=g.user)
         question.answer_set.append(answer)
         db.session.commit()
-        return redirect(url_for('question.detail',question_id=question_id))
+        return redirect('{}#answer_{}'.format(
+            url_for('question.detail',question_id=question_id), answer.id))
     return redirect(url_for('question.detail',question_id=question_id))
 
 #form 엘리먼트를 통해 전달된 데이터들은 create 함수에서 request 객체로 얻을 수 있다. request.form['content'] 코드는 POST 폼 방식으로 전송된 데이터 항목 중 name 속성이 'content'인 값을 의미한다.
@@ -37,7 +38,8 @@ def modify(answer_id):
             form.populate_obj(answer)
             answer.modify_date = datetime.now()  # 수정일시 저장
             db.session.commit()
-            return redirect(url_for('question.detail', question_id=answer.question.id))
+            return redirect('{}#answer_{}'.format(
+            url_for('question.detail',question_id=answer.question.id), answer.id))
     else:
         form = AnswerForm(obj=answer)
     return render_template('answer/answer_form.html', answer=answer, form=form)

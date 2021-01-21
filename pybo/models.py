@@ -8,7 +8,15 @@ question_voter = db.Table(
 
     'question_voter',
     db.Column('user_id',db.Integer, db.ForeignKey('user.id',ondelete='CASCADE'), primary_key=True),
-    db.Column('question_id',db.Integer, db.ForeigKey('question.id',ondelete='CASCADE'),primary_key=True)
+    db.Column('question_id',db.Integer, db.ForeignKey('question.id',ondelete='CASCADE'),primary_key=True)
+
+)
+
+answer_voter = db.Table(
+
+    'answer_voter',
+    db.Column('user_id',db.Integer, db.ForeignKey('user.id',ondelete='CASCADE'), primary_key=True),
+    db.Column('answer_id',db.Integer, db.ForeignKey('answer.id',ondelete='CASCADE'),primary_key=True)
 
 )
 
@@ -20,6 +28,7 @@ class Question(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     user = db.relationship('User',backref=db.backref('question_set'))
     modify_date = db.Column(db.DateTime(), nullable=True)
+    voter = db.relationship('User',secondary=question_voter, backref=db.backref('question_voter_set'))
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id',ondelete='CASCADE'))     #db.ForeignKey에 지정한 첫 번째 값은 연결한 모델의 속성명이고 두 번째 ondelete에 지정한 값은 삭제 연동 설정이다. 즉, 답변 모델의 quesion_id 속성은 질문 모델의 id 속성과 연결되며 ondelete='CASCADE'에 의해 데이터베이스에서 쿼리를 이용하여 질문을 삭제하면 해당 질문에 달린 답변도 함꼐 삭제된다.
@@ -29,6 +38,7 @@ class Answer(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'), nullable=False)
     user = db.relationship('User',backref=db.backref('answer_set'))
     modify_date = db.Column(db.DateTime(), nullable=True)
+    voter = db.relationship('User',secondary=answer_voter, backref=db.backref('answer_voter_set'))
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
