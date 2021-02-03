@@ -1,2 +1,2 @@
 # Flask_study
-flask
+flask_QnA_Service
